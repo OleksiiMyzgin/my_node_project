@@ -14,7 +14,9 @@ router.get('/', (req, res) => {
     //     name: 'alex',
     //     age: 100
     // });
-    res.render('hello');
+    res.render('hello', {
+        title: 'I love Food'
+    });
 });
 
 router.get('/reverse/:name', (req, res) => {
