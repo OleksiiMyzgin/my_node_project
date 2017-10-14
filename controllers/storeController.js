@@ -1,8 +1,4 @@
-exports.myMiddleware = (req, res, next) => {
-    req.name = 'Alex';
-    next();
-}
-
 exports.homePage = (req, res) => {
+    console.log(res.name)
     res.render('index');
 }
