@@ -6,6 +6,8 @@ const storeController = require('../controllers/storeController');
 // res is object full of methods that sending data back to user 
 // Do work here
 
-router.get('/', storeController.homePage)
+router.get('/', storeController.homePage);
+router.get('/add', storeController.addStore);
+router.post('/add', storeController.createStore);
 
 module.exports = router;
