@@ -7,7 +7,8 @@ const { catchErrors } = require('../handlers/errorHandlers');
 // res is object full of methods that sending data back to user 
 // Do work here
 
-router.get('/', storeController.homePage);
+router.get('/', catchErrors(storeController.getStores));
+router.get('/stores', catchErrors(storeController.getStores));
 router.get('/add', storeController.addStore);
 router.post('/add', catchErrors(storeController.createStore));
 
