@@ -69,11 +69,11 @@ exports.updateStore = async (req, res) => {
     req.body.location.type = 'Point';
     // find and update store
     const store = await Store.findOneAndUpdate(
-            { _id: req.params.id},
-            req.body,
-            {new: true, // return the new store instead of the old one
+        { _id: req.params.id},
+        req.body,
+        {new: true, // return the new store instead of the old one
             runValidators: true}
-        ).exec();
+    ).exec();
     req.flash('success', `Successfully updated <strong>${store.name}</strong>. <a href="/stores/${store.slug}">View Store =></a>`);
     res.redirect(`/stores/${store._id}/edit`);
     // Redirect them the store and tell them it worked
@@ -87,7 +87,11 @@ exports.getStoreBySlug = async (req, res, next) => {
 };
 
 exports.getStoreByTag = async(req, res) => {
-    const tags = await Store.getTagsList();
     const tag = req.params.tag;
-    res.render('tag', { tags, title: 'Tags', tag });
+    // if there is no tag its just gonna fall back to second query (give me any store that a tag property on it)
+    const tagQuery = tag || { $exists: true };
+    const tagsPromise =  Store.getTagsList();
+    const storePromise = Store.find({ tags: tagQuery });
+    const [tags, stores] = await Promise.all([tagsPromise, storePromise]);
+    res.render('tag', { tags, title: 'Tags', tag, stores });
 };
