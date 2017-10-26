@@ -35,14 +35,23 @@
   photo: String
  });
 
- storeSchema.pre('save', function(next){
-   if(!this.isModified('name')) {
-     next(); // skip it
-     return; // stop this function from running 
-   }
-   this.slug = slug(this.name);
-   next();
-   // TODO make more resiliant so slugs are unique 
+ storeSchema.pre('save', async function(next) {
+     if (this.isModified('name')) {
+         this.slug = await this.generateSlugFromName(this.name);
+     }
+
+     next();
  });
+
+ storeSchema.methods.generateSlugFromName = async function(name) {
+     let nameSlugged = slug(name);
+     const slugRegEx = new RegExp(`^(${nameSlugged})((-[0-9]*$)?)$`, 'i');
+     const storesWithSlug = await this.constructor.find({ slug: slugRegEx });
+     if (storesWithSlug.length > 0) {
+         nameSlugged += '-' + (storesWithSlug.length + 1);
+     }
+
+     return nameSlugged;
+ };
 
  module.exports = mongoose.model('Store', storeSchema);
