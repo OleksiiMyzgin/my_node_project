@@ -53,5 +53,13 @@
 
      return nameSlugged;
  };
+ 
+ storeSchema.statics.getTagsList = function () {
+     return this.aggregate([
+         { $unwind: '$tags'}, // $ this is the field in my docs that i want to unwind
+         { $group: { _id: '$tags', count: { $sum: 1 } } },
+         { $sort : { count: -1 } }
+     ]);
+ };
 
  module.exports = mongoose.model('Store', storeSchema);
