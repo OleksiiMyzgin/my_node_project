@@ -40,6 +40,12 @@
   }
  });
 
+ // Define our Indexes
+ storeSchema.index({
+     name: 'text',
+     description: 'text'
+ });
+
  storeSchema.pre('save', async function(next) {
      if (this.isModified('name')) {
          this.slug = await this.generateSlugFromName(this.name);
