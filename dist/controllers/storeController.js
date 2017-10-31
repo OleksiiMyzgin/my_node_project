@@ -350,7 +350,7 @@ exports.mapStores = function () {
                             }
                         };
                         _context9.next = 4;
-                        return Store.find(q).select('slug name description location').limit(10);
+                        return Store.find(q).select('slug name description location photo').limit(10);
 
                     case 4:
                         stores = _context9.sent;
@@ -369,4 +369,8 @@ exports.mapStores = function () {
         return _ref11.apply(this, arguments);
     };
 }();
+
+exports.mapPage = function (req, res) {
+    res.render('map', { title: 'Map' });
+};
 //# sourceMappingURL=storeController.js.map
