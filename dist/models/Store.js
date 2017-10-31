@@ -50,6 +50,8 @@ storeSchema.index({
     description: 'text'
 });
 
+storeSchema.index({ location: '2dsphere' });
+
 storeSchema.pre('save', function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(next) {
         return regeneratorRuntime.wrap(function _callee$(_context) {

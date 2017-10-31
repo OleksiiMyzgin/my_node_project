@@ -329,4 +329,44 @@ exports.searchStores = function () {
         return _ref10.apply(this, arguments);
     };
 }();
+
+exports.mapStores = function () {
+    var _ref11 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee9(req, res) {
+        var coordinates, q, stores;
+        return regeneratorRuntime.wrap(function _callee9$(_context9) {
+            while (1) {
+                switch (_context9.prev = _context9.next) {
+                    case 0:
+                        coordinates = [req.query.lng, req.query.lat].map(parseFloat);
+                        q = {
+                            location: {
+                                $near: {
+                                    $geometry: {
+                                        type: 'Point',
+                                        coordinates: coordinates
+                                    },
+                                    $maxDistance: 10000 // 10km
+                                }
+                            }
+                        };
+                        _context9.next = 4;
+                        return Store.find(q).select('slug name description location').limit(10);
+
+                    case 4:
+                        stores = _context9.sent;
+
+                        res.json(stores);
+
+                    case 6:
+                    case 'end':
+                        return _context9.stop();
+                }
+            }
+        }, _callee9, undefined);
+    }));
+
+    return function (_x19, _x20) {
+        return _ref11.apply(this, arguments);
+    };
+}();
 //# sourceMappingURL=storeController.js.map
