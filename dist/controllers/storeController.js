@@ -2,10 +2,13 @@
 
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 var mongoose = require('mongoose');
 var Store = mongoose.model('Store');
+var User = mongoose.model('User');
 var multer = require('multer');
 var jimp = require('jimp');
 var uuid = require('uuid');
@@ -373,4 +376,36 @@ exports.mapStores = function () {
 exports.mapPage = function (req, res) {
     res.render('map', { title: 'Map' });
 };
+
+exports.heartStore = function () {
+    var _ref12 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee10(req, res) {
+        var hearts, operator, user;
+        return regeneratorRuntime.wrap(function _callee10$(_context10) {
+            while (1) {
+                switch (_context10.prev = _context10.next) {
+                    case 0:
+                        hearts = req.user.hearts.map(function (obj) {
+                            return obj.toString();
+                        });
+                        operator = hearts.includes(req.params.id) ? '$pull' : '$addToSet';
+                        _context10.next = 4;
+                        return User.findOneAndUpdate(req.user._id, _defineProperty({}, operator, { hearts: req.params.id }), { new: true });
+
+                    case 4:
+                        user = _context10.sent;
+
+                        res.json(user);
+
+                    case 6:
+                    case 'end':
+                        return _context10.stop();
+                }
+            }
+        }, _callee10, undefined);
+    }));
+
+    return function (_x21, _x22) {
+        return _ref12.apply(this, arguments);
+    };
+}();
 //# sourceMappingURL=storeController.js.map
