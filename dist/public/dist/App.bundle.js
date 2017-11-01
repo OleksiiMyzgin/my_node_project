@@ -2891,7 +2891,6 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
     var _this = this;
 
     e.preventDefault();
-    console.log('HEART IT!!');
     _axios2.default.post(this.action).then(function (res) {
       var isHearted = _this.heart.classList.toggle('heart__button--hearted');
       (0, _bling.$)('.heart-count').textContent = res.data.hearts.length;
