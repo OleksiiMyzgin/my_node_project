@@ -408,4 +408,34 @@ exports.heartStore = function () {
         return _ref12.apply(this, arguments);
     };
 }();
+
+exports.getHearts = function () {
+    var _ref13 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee11(req, res) {
+        var stores;
+        return regeneratorRuntime.wrap(function _callee11$(_context11) {
+            while (1) {
+                switch (_context11.prev = _context11.next) {
+                    case 0:
+                        _context11.next = 2;
+                        return Store.find({
+                            _id: { $in: req.user.hearts }
+                        });
+
+                    case 2:
+                        stores = _context11.sent;
+
+                        res.render('stores', { title: 'Hearted Stores', stores: stores });
+
+                    case 4:
+                    case 'end':
+                        return _context11.stop();
+                }
+            }
+        }, _callee11, undefined);
+    }));
+
+    return function (_x23, _x24) {
+        return _ref13.apply(this, arguments);
+    };
+}();
 //# sourceMappingURL=storeController.js.map

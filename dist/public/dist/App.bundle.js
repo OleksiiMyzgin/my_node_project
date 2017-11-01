@@ -2897,6 +2897,9 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
       (0, _bling.$)('.heart-count').textContent = res.data.hearts.length;
       if (isHearted) {
         _this.heart.classList.add('heart__button--float');
+        setTimeout(function () {
+          return _this.heart.classList.remove('heart__button--float');
+        }, 2500);
       }
     }).catch(console.error);
   }
