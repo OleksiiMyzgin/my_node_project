@@ -222,7 +222,7 @@ exports.getStoreBySlug = function () {
                 switch (_context6.prev = _context6.next) {
                     case 0:
                         _context6.next = 2;
-                        return Store.findOne({ slug: req.params.slug }).populate('author');
+                        return Store.findOne({ slug: req.params.slug }).populate('author reviews');
 
                     case 2:
                         store = _context6.sent;
