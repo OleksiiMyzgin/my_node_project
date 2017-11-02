@@ -43,7 +43,7 @@ exports.resize = async (req, res, next) => {
     // once we have written the photo to our filesystem, keep going!
     next();
 
-}
+};
 
 exports.createStore = async (req, res) => {
     req.body.author = req.user._id;
@@ -176,7 +176,7 @@ exports.heartStore = async (req, res) => {
     const hearts = req.user.hearts.map(obj => obj.toString());
     const operator = hearts.includes(req.params.id) ? '$pull' : '$addToSet';
     const user = await User
-        .findOneAndUpdate( req.user._id,
+        .findByIdAndUpdate( req.user._id,
             { [operator] : { hearts: req.params.id } },
             { new: true }
         );

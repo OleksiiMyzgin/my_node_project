@@ -413,7 +413,7 @@ exports.heartStore = function () {
                         });
                         operator = hearts.includes(req.params.id) ? '$pull' : '$addToSet';
                         _context10.next = 4;
-                        return User.findOneAndUpdate(req.user._id, _defineProperty({}, operator, { hearts: req.params.id }), { new: true });
+                        return User.findByIdAndUpdate(req.user._id, _defineProperty({}, operator, { hearts: req.params.id }), { new: true });
 
                     case 4:
                         user = _context10.sent;
