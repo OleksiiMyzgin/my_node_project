@@ -438,4 +438,32 @@ exports.getHearts = function () {
         return _ref13.apply(this, arguments);
     };
 }();
+
+exports.getTopStores = function () {
+    var _ref14 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee12(req, res) {
+        var stores;
+        return regeneratorRuntime.wrap(function _callee12$(_context12) {
+            while (1) {
+                switch (_context12.prev = _context12.next) {
+                    case 0:
+                        _context12.next = 2;
+                        return Store.getTopStores();
+
+                    case 2:
+                        stores = _context12.sent;
+
+                        res.render('topStores', { stores: stores, title: 'Top Stores!' });
+
+                    case 4:
+                    case 'end':
+                        return _context12.stop();
+                }
+            }
+        }, _callee12, undefined);
+    }));
+
+    return function (_x25, _x26) {
+        return _ref14.apply(this, arguments);
+    };
+}();
 //# sourceMappingURL=storeController.js.map
