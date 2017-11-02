@@ -116,20 +116,44 @@ exports.createStore = function () {
 
 exports.getStores = function () {
     var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(req, res) {
-        var stores;
+        var page, limit, skip, storesPromise, countPromise, _ref4, _ref5, stores, count, pages;
+
         return regeneratorRuntime.wrap(function _callee3$(_context3) {
             while (1) {
                 switch (_context3.prev = _context3.next) {
                     case 0:
-                        _context3.next = 2;
-                        return Store.find();
+                        page = req.params.page || 1;
+                        limit = 4;
+                        skip = page * limit - limit;
 
-                    case 2:
-                        stores = _context3.sent;
-                        // return Promise
-                        res.render('stores', { title: 'Stores', stores: stores });
+                        // 1. Query the database for a list of all stores
 
-                    case 4:
+                        storesPromise = Store.find().skip(skip).limit(limit).sort({ created: 'desc' });
+                        countPromise = Store.count();
+                        _context3.next = 7;
+                        return Promise.all([storesPromise, countPromise]);
+
+                    case 7:
+                        _ref4 = _context3.sent;
+                        _ref5 = _slicedToArray(_ref4, 2);
+                        stores = _ref5[0];
+                        count = _ref5[1];
+                        pages = Math.ceil(count / limit);
+
+                        if (!(!stores.length && skip)) {
+                            _context3.next = 16;
+                            break;
+                        }
+
+                        req.flash('info', 'Hey! You asked for page ' + page + '. But that doesn\'t exist. So I put you on page ' + pages);
+                        res.redirect('/stores/page/' + pages);
+                        return _context3.abrupt('return');
+
+                    case 16:
+
+                        res.render('stores', { title: 'Stores', stores: stores, page: page, pages: pages, count: count });
+
+                    case 17:
                     case 'end':
                         return _context3.stop();
                 }
@@ -150,7 +174,7 @@ var confirmOwner = function confirmOwner(store, user) {
 };
 
 exports.editStore = function () {
-    var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(req, res) {
+    var _ref6 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(req, res) {
         var store;
         return regeneratorRuntime.wrap(function _callee4$(_context4) {
             while (1) {
@@ -176,12 +200,12 @@ exports.editStore = function () {
     }));
 
     return function (_x8, _x9) {
-        return _ref4.apply(this, arguments);
+        return _ref6.apply(this, arguments);
     };
 }();
 
 exports.updateStore = function () {
-    var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(req, res) {
+    var _ref7 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(req, res) {
         var store;
         return regeneratorRuntime.wrap(function _callee5$(_context5) {
             while (1) {
@@ -210,12 +234,12 @@ exports.updateStore = function () {
     }));
 
     return function (_x10, _x11) {
-        return _ref5.apply(this, arguments);
+        return _ref7.apply(this, arguments);
     };
 }();
 
 exports.getStoreBySlug = function () {
-    var _ref6 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6(req, res, next) {
+    var _ref8 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6(req, res, next) {
         var store;
         return regeneratorRuntime.wrap(function _callee6$(_context6) {
             while (1) {
@@ -246,13 +270,13 @@ exports.getStoreBySlug = function () {
     }));
 
     return function (_x12, _x13, _x14) {
-        return _ref6.apply(this, arguments);
+        return _ref8.apply(this, arguments);
     };
 }();
 
 exports.getStoreByTag = function () {
-    var _ref7 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee7(req, res) {
-        var tag, tagQuery, tagsPromise, storePromise, _ref8, _ref9, tags, stores;
+    var _ref9 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee7(req, res) {
+        var tag, tagQuery, tagsPromise, storePromise, _ref10, _ref11, tags, stores;
 
         return regeneratorRuntime.wrap(function _callee7$(_context7) {
             while (1) {
@@ -268,10 +292,10 @@ exports.getStoreByTag = function () {
                         return Promise.all([tagsPromise, storePromise]);
 
                     case 6:
-                        _ref8 = _context7.sent;
-                        _ref9 = _slicedToArray(_ref8, 2);
-                        tags = _ref9[0];
-                        stores = _ref9[1];
+                        _ref10 = _context7.sent;
+                        _ref11 = _slicedToArray(_ref10, 2);
+                        tags = _ref11[0];
+                        stores = _ref11[1];
 
 
                         res.render('tag', { tags: tags, title: 'Tags', tag: tag, stores: stores });
@@ -285,12 +309,12 @@ exports.getStoreByTag = function () {
     }));
 
     return function (_x15, _x16) {
-        return _ref7.apply(this, arguments);
+        return _ref9.apply(this, arguments);
     };
 }();
 
 exports.searchStores = function () {
-    var _ref10 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee8(req, res) {
+    var _ref12 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee8(req, res) {
         var stores;
         return regeneratorRuntime.wrap(function _callee8$(_context8) {
             while (1) {
@@ -329,12 +353,12 @@ exports.searchStores = function () {
     }));
 
     return function (_x17, _x18) {
-        return _ref10.apply(this, arguments);
+        return _ref12.apply(this, arguments);
     };
 }();
 
 exports.mapStores = function () {
-    var _ref11 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee9(req, res) {
+    var _ref13 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee9(req, res) {
         var coordinates, q, stores;
         return regeneratorRuntime.wrap(function _callee9$(_context9) {
             while (1) {
@@ -369,7 +393,7 @@ exports.mapStores = function () {
     }));
 
     return function (_x19, _x20) {
-        return _ref11.apply(this, arguments);
+        return _ref13.apply(this, arguments);
     };
 }();
 
@@ -378,7 +402,7 @@ exports.mapPage = function (req, res) {
 };
 
 exports.heartStore = function () {
-    var _ref12 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee10(req, res) {
+    var _ref14 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee10(req, res) {
         var hearts, operator, user;
         return regeneratorRuntime.wrap(function _callee10$(_context10) {
             while (1) {
@@ -405,12 +429,12 @@ exports.heartStore = function () {
     }));
 
     return function (_x21, _x22) {
-        return _ref12.apply(this, arguments);
+        return _ref14.apply(this, arguments);
     };
 }();
 
 exports.getHearts = function () {
-    var _ref13 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee11(req, res) {
+    var _ref15 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee11(req, res) {
         var stores;
         return regeneratorRuntime.wrap(function _callee11$(_context11) {
             while (1) {
@@ -435,12 +459,12 @@ exports.getHearts = function () {
     }));
 
     return function (_x23, _x24) {
-        return _ref13.apply(this, arguments);
+        return _ref15.apply(this, arguments);
     };
 }();
 
 exports.getTopStores = function () {
-    var _ref14 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee12(req, res) {
+    var _ref16 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee12(req, res) {
         var stores;
         return regeneratorRuntime.wrap(function _callee12$(_context12) {
             while (1) {
@@ -463,7 +487,7 @@ exports.getTopStores = function () {
     }));
 
     return function (_x25, _x26) {
-        return _ref14.apply(this, arguments);
+        return _ref16.apply(this, arguments);
     };
 }();
 //# sourceMappingURL=storeController.js.map

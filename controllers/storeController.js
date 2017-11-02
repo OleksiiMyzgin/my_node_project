@@ -53,9 +53,30 @@ exports.createStore = async (req, res) => {
 };
 
 exports.getStores = async (req, res) => {
+    const page = req.params.page || 1;
+    const limit = 4;
+    const skip = (page * limit) - limit;
+
     // 1. Query the database for a list of all stores
-    const stores = await Store.find(); // return Promise
-    res.render('stores', { title: 'Stores', stores });
+    const storesPromise = Store
+        .find()
+        .skip(skip)
+        .limit(limit)
+        .sort({ created: 'desc'});
+
+    const countPromise = Store.count();
+
+    const [stores, count] = await Promise.all([storesPromise, countPromise]);
+
+    const pages = Math.ceil(count / limit);
+
+    if(!stores.length && skip) {
+        req.flash('info', `Hey! You asked for page ${page}. But that doesn't exist. So I put you on page ${pages}`);
+        res.redirect(`/stores/page/${pages}`);
+        return;
+    }
+
+    res.render('stores', { title: 'Stores', stores, page, pages, count });
 };
 
 // if we need admin we can implement user.level < 10 where 10 is admin and 20 is user
